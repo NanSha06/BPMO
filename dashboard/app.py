@@ -66,22 +66,78 @@ st.set_page_config(
     page_title = config["dashboard"]["title"],
     page_icon  = config["dashboard"]["page_icon"],
     layout     = config["dashboard"]["layout"],
+    initial_sidebar_state = "expanded",
 )
 
 # ── Custom CSS ────────────────────────────────────────────────
 st.markdown("""
 <style>
-    .block-container { padding-top: 1.5rem; padding-bottom: 1rem; }
-    h1 { color: #1E1B4B; }
-    h2 { color: #312E81; font-size: 1.2rem; margin-top: 1.5rem; }
+    /* ── Force white/light backgrounds everywhere ── */
+    .stApp                          { background-color: #F8FAFF !important; }
+    .main .block-container          { background-color: #F8FAFF !important;
+                                      padding-top: 1.8rem; }
+    section[data-testid="stSidebar"]{ background-color: #EEF2FF !important;
+                                      border-right: 1.5px solid #C7D2FE; }
+
+    /* ── Headings ── */
+    h1 { color: #1E1B4B !important; font-size: 2rem !important;
+         font-weight: 800 !important; letter-spacing: -0.5px; }
+    h2 { color: #3730A3 !important; font-size: 1.15rem !important;
+         font-weight: 700 !important; margin-top: 1.6rem !important; }
+    h3 { color: #4F46E5 !important; }
+
+    /* ── KPI metric cards ── */
     [data-testid="metric-container"] {
-        background: #F5F3FF;
-        border: 1px solid #DDD6FE;
-        border-radius: 10px;
-        padding: 14px 18px;
+        background      : #FFFFFF !important;
+        border          : 2px solid #C7D2FE !important;
+        border-radius   : 14px !important;
+        padding         : 18px 22px !important;
+        box-shadow      : 0 2px 8px rgba(99,102,241,0.10) !important;
     }
-    .stDataFrame { border-radius: 8px; }
-    div[data-testid="stHorizontalBlock"] { gap: 1rem; }
+    [data-testid="metric-container"] label {
+        color       : #6366F1 !important;
+        font-weight : 700 !important;
+        font-size   : 0.80rem !important;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+    [data-testid="metric-container"] [data-testid="stMetricValue"] {
+        color       : #1E1B4B !important;
+        font-size   : 1.65rem !important;
+        font-weight : 800 !important;
+    }
+    [data-testid="metric-container"] [data-testid="stMetricDelta"] {
+        font-size   : 0.78rem !important;
+    }
+
+    /* ── Sidebar ── */
+    section[data-testid="stSidebar"] * { color: #1E1B4B !important; }
+    section[data-testid="stSidebar"] .stSelectbox label,
+    section[data-testid="stSidebar"] .stSlider    label {
+        color: #3730A3 !important; font-weight: 700 !important;
+    }
+
+    /* ── Dividers ── */
+    hr { border-color: #C7D2FE !important; margin: 1.2rem 0 !important; }
+
+    /* ── DataFrames ── */
+    .stDataFrame { border-radius: 10px !important;
+                   border: 1.5px solid #E0E7FF !important; }
+
+    /* ── Plotly chart containers ── */
+    [data-testid="stPlotlyChart"] {
+        border-radius : 14px !important;
+        border        : 1.5px solid #E0E7FF !important;
+        box-shadow    : 0 2px 8px rgba(99,102,241,0.07) !important;
+        padding       : 8px !important;
+        background    : #FFFFFF !important;
+    }
+
+    /* ── Info / success / error boxes ── */
+    .stAlert { border-radius: 10px !important; }
+
+    /* ── Caption / footer ── */
+    .stCaption { color: #6366F1 !important; font-size: 0.78rem !important; }
 </style>
 """, unsafe_allow_html=True)
 
