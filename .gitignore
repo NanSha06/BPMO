@@ -1,0 +1,18 @@
+Add-Content -Path ".gitignore" -Value @"
+.env
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+logs/
+data/raw/
+*.xes
+*.xes.gz
+.vscode/
+.idea/
+"@
+helpdesk_tickets.csvhelpdesk_tickets.csv

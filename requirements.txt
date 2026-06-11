@@ -1,0 +1,94 @@
+# =============================================================
+# requirements.txt
+# Business Process Mining & Optimization Platform
+# =============================================================
+#
+# Install all at once:
+#   pip install -r requirements.txt
+#
+# Or install phase by phase (recommended for students):
+#   Phase 1:  pip install -r requirements.txt --no-deps (see below)
+#
+# Sections
+# --------
+#   1. Core data & database       ← needed from Day 1
+#   2. Process mining             ← needed from Day 1
+#   3. API backend                ← Step 6
+#   4. Dashboard                  ← Step 5
+#   5. Machine learning           ← Phase 2
+#   6. GenAI & LLM                ← Phase 2
+#   7. Vector database & RAG      ← Phase 3
+#   8. Dev & testing utilities    ← optional but recommended
+# =============================================================
+
+
+# -------------------------------------------------------------
+# 1. Core data & database  (Phase 1 — install first)
+# -------------------------------------------------------------
+pandas==2.2.2
+numpy==1.26.4
+sqlalchemy==2.0.30
+psycopg2-binary==2.9.9
+python-dotenv==1.0.1
+pyyaml==6.0.1
+openpyxl==3.1.2
+
+
+# -------------------------------------------------------------
+# 2. Process mining engine  (Phase 1)
+# -------------------------------------------------------------
+pm4py==2.7.11
+networkx==3.3
+
+
+# -------------------------------------------------------------
+# 3. API backend — FastAPI  (Phase 1 Step 6)
+# -------------------------------------------------------------
+fastapi==0.111.0
+uvicorn==0.30.1
+pydantic==2.7.1
+python-multipart==0.0.9
+httpx==0.27.0
+
+
+# -------------------------------------------------------------
+# 4. Dashboard — Streamlit & visualisation  (Phase 1 Step 5)
+# -------------------------------------------------------------
+streamlit==1.35.0
+plotly==5.22.0
+graphviz==0.20.3
+
+
+# -------------------------------------------------------------
+# 5. Machine learning  (Phase 2)
+# -------------------------------------------------------------
+scikit-learn==1.5.0
+xgboost==2.0.3
+lightgbm==4.3.0
+
+
+# -------------------------------------------------------------
+# 6. GenAI & LLM layer  (Phase 2)
+# -------------------------------------------------------------
+google-generativeai==0.7.2
+openai==1.30.1
+
+
+# -------------------------------------------------------------
+# 7. Vector database & RAG  (Phase 3)
+# -------------------------------------------------------------
+chromadb==0.5.0
+langchain==0.2.1
+langchain-community==0.2.1
+langchain-google-genai==1.0.3
+pypdf==4.2.0
+python-docx==1.1.2
+
+
+# -------------------------------------------------------------
+# 8. Dev & testing utilities  (optional but recommended)
+# -------------------------------------------------------------
+pytest==8.2.1
+pytest-asyncio==0.23.7
+black==24.4.2
+isort==5.13.2

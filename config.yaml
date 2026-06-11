@@ -1,0 +1,205 @@
+# =============================================================
+# config.yaml — Business Process Mining & Optimization Platform
+# =============================================================
+# This file holds all non-secret configuration for the platform.
+# Secret values (passwords, API keys) live in .env — never here.
+# All modules import this file using the load_config() helper.
+# =============================================================
+
+
+# -------------------------------------------------------------
+# Project metadata
+# -------------------------------------------------------------
+project:
+  name: Business Process Mining & Optimization Platform
+  version: "1.0.0"
+  phase: 1                        # change to 2 or 3 as you progress
+  description: >
+    AI-powered platform to discover, analyse, monitor,
+    and optimise business processes from event logs.
+
+
+# -------------------------------------------------------------
+# Database
+# Credentials are loaded from .env — do not put them here.
+# -------------------------------------------------------------
+database:
+  pool_size: 5                    # number of persistent connections
+  max_overflow: 10                # extra connections allowed under load
+  pool_pre_ping: true             # test connection before each use
+  echo: false                     # set true to print all SQL to console
+
+  tables:
+    event_log: event_log
+    cases: cases
+    etl_runs: etl_runs
+
+
+# -------------------------------------------------------------
+# ETL pipeline
+# -------------------------------------------------------------
+etl:
+  chunk_size: 50000               # rows written per DB batch
+  min_rows: 10                    # reject files with fewer rows
+
+  # Column name map: source CSV column → standard event log column
+  # Add rows here if your CSV uses different column names
+  column_map:
+    Ticket_ID:           case_id
+    Date_Created:        timestamp_created
+    Date_Resolved:       timestamp_resolved
+    Assigned_Team:       resource
+    Category:            category
+    Subcategory:         subcategory
+    Priority:            priority
+    Status:              current_status
+    Escalated:           escalated
+    Resolution_Time_Hrs: resolution_time_hrs
+
+  # Activities generated during ticket-to-event explosion
+  activity_names:
+    opened:    ticket opened
+    escalated: ticket escalated
+    resolved:  ticket resolved
+    status_prefix: "status: "    # prepended to Status value for open tickets
+
+  # Timing offsets for synthetic event timestamps
+  # (tickets have only 2 timestamps; intermediate events are inferred)
+  offsets:
+    escalated_hours: 1            # escalation placed N hours after ticket opened
+    status_hours: 2               # status snapshot placed N hours after ticket opened
+
+  # Supported input file formats
+  supported_formats:
+    - .csv
+    - .xlsx
+    - .xls
+    - .xes
+    - .json
+
+
+# -------------------------------------------------------------
+# Process mining engine  (Phase 1 Step 2)
+# -------------------------------------------------------------
+process_mining:
+  algorithm: heuristic_miner      # options: alpha_miner, heuristic_miner, inductive_miner
+  dependency_threshold: 0.5       # heuristic miner sensitivity (0.0–1.0)
+  min_act_count: 10               # ignore activities with fewer occurrences
+  min_dfg_occurrences: 10         # ignore edges with fewer occurrences
+
+  # Columns PM4Py requires — must match event_log table column names
+  case_id_col: case_id
+  activity_col: activity
+  timestamp_col: timestamp
+
+
+# -------------------------------------------------------------
+# KPIs and bottleneck detection  (Phase 1 Step 3)
+# -------------------------------------------------------------
+kpis:
+  # SLA threshold: tickets taking longer than this are flagged as breached
+  sla_threshold_hrs: 48
+
+  # Percentiles computed for cycle time distribution
+  cycle_time_percentiles:
+    - 50
+    - 75
+    - 90
+    - 95
+
+  # Minimum wait time (minutes) to flag an activity as a bottleneck
+  bottleneck_threshold_mins: 60
+
+
+# -------------------------------------------------------------
+# Variant analysis  (Phase 1 Step 4)
+# -------------------------------------------------------------
+variants:
+  top_n: 10                       # number of top variants to display
+  min_variant_count: 5            # ignore variants with fewer cases
+
+
+# -------------------------------------------------------------
+# Streamlit dashboard  (Phase 1 Step 5)
+# -------------------------------------------------------------
+dashboard:
+  title: Process Mining Dashboard
+  page_icon: "📊"
+  layout: wide                    # wide or centered
+
+  # Default filter values shown on first load
+  defaults:
+    source: helpdesk
+    priority: All
+    category: All
+    top_n_variants: 10
+
+  # Chart height in pixels
+  chart_height: 450
+
+  # KPI card labels
+  kpi_labels:
+    total_cases:        Total tickets
+    avg_cycle_time:     Avg cycle time (hrs)
+    sla_breach_rate:    SLA breach rate (%)
+    escalation_rate:    Escalation rate (%)
+    resolved_rate:      Resolution rate (%)
+
+
+# -------------------------------------------------------------
+# FastAPI backend  (Phase 1 Step 6)
+# -------------------------------------------------------------
+api:
+  title: Process Mining API
+  version: "1.0.0"
+  docs_url: /docs                 # Swagger UI path
+  redoc_url: /redoc
+
+  # CORS — add your Streamlit/React origin here
+  cors_origins:
+    - http://localhost:8501        # Streamlit
+    - http://localhost:3000        # React (Phase 2)
+
+  # API route prefixes
+  routes:
+    etl:      /api/etl
+    kpis:     /api/kpis
+    variants: /api/variants
+    graph:    /api/graph
+    cases:    /api/cases
+
+
+# -------------------------------------------------------------
+# Logging
+# -------------------------------------------------------------
+logging:
+  level: INFO                     # DEBUG | INFO | WARNING | ERROR
+  format: "[%(asctime)s] %(levelname)s %(name)s — %(message)s"
+  date_format: "%Y-%m-%d %H:%M:%S"
+  log_to_file: false
+  log_file: logs/platform.log
+
+
+# -------------------------------------------------------------
+# AI recommendation engine  (Phase 2 — ignored in Phase 1)
+# -------------------------------------------------------------
+llm:
+  model: gemini-2.5-flash
+  temperature: 0.2
+  max_tokens: 1000
+  system_prompt: >
+    You are a business process improvement expert.
+    Analyse the provided process mining data and give
+    clear, actionable recommendations to reduce cycle
+    time, eliminate bottlenecks, and improve SLA compliance.
+    Be specific and concise.
+
+
+# -------------------------------------------------------------
+# Vector database — ChromaDB  (Phase 3 — ignored in Phase 1)
+# -------------------------------------------------------------
+vector_db:
+  collection_name: process_docs
+  chunk_size: 500
+  chunk_overlap: 50
+  embedding_model: models/embedding-001
