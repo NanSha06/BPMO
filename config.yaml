@@ -86,6 +86,7 @@ process_mining:
   dependency_threshold: 0.5       # heuristic miner sensitivity (0.0–1.0)
   min_act_count: 10               # ignore activities with fewer occurrences
   min_dfg_occurrences: 10         # ignore edges with fewer occurrences
+  discovery_sample_size: 100000
 
   # Columns PM4Py requires — must match event_log table column names
   case_id_col: case_id

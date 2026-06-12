@@ -46,6 +46,7 @@ from analytics.kpis          import KPIEngine
 from analytics.bottlenecks   import BottleneckEngine
 from process_mining.discovery import ProcessDiscovery
 from process_mining.variants  import VariantAnalyser
+from analytics.cache_manager  import get_cached, set_cached
 
 from dashboard.components import (
     kpi_cards,
@@ -148,30 +149,52 @@ st.markdown("""
 # The cache is invalidated when filter parameters change.
 # ─────────────────────────────────────────────────────────────
 
-@st.cache_data(show_spinner=False)
+@st.cache_data(ttl=86400, show_spinner=False)
 def load_kpis(source, priority, category):
-    return KPIEngine().compute(
+    cached = get_cached("kpis", source, priority, category)
+    if cached is not None:
+        return cached
+    result = KPIEngine().compute(
         source=source, priority=priority, category=category
     )
+    set_cached("kpis", result, source, priority, category)
+    return result
 
-@st.cache_data(show_spinner=False)
+@st.cache_data(ttl=86400, show_spinner=False)
 def load_bottlenecks(source, priority, category):
-    return BottleneckEngine().analyse(
+    cached = get_cached("bottlenecks_full", source, priority, category)
+    if cached is not None:
+        return cached
+    result = BottleneckEngine().analyse(
         source=source, priority=priority, category=category
     )
+    set_cached("bottlenecks_full", result, source, priority, category)
+    return result
 
-@st.cache_data(show_spinner=False)
+
+@st.cache_data(ttl=86400, show_spinner=False)
 def load_process_flow(source, priority, category):
-    return ProcessDiscovery().get_dfg_for_display(
+    cached = get_cached("graph", source, priority, category)
+    if cached is not None:
+        return cached
+    result = ProcessDiscovery().get_dfg_for_display(
         source=source, priority=priority, category=category,
         min_edge_count=500,
     )
+    set_cached("graph", result, source, priority, category)
+    return result
 
-@st.cache_data(show_spinner=False)
+
+@st.cache_data(ttl=86400, show_spinner=False)
 def load_variants(source, priority, category):
-    return VariantAnalyser().analyse(
+    cached = get_cached("variants", source, priority, category)
+    if cached is not None:
+        return cached
+    result = VariantAnalyser().analyse(
         source=source, priority=priority, category=category
     )
+    set_cached("variants", result, source, priority, category)
+    return result
 
 
 # ─────────────────────────────────────────────────────────────
