@@ -1,0 +1,62 @@
+[
+  {
+    "trained_at": "2026-06-14T12:29:39.375769+00:00",
+    "filters": {
+      "source": "helpdesk",
+      "priority": null,
+      "category": null
+    },
+    "delay_model": {
+      "mae_hrs": 2.43,
+      "rmse_hrs": 2.83,
+      "r2_log": -0.001,
+      "n_train": 800000,
+      "n_test": 200000,
+      "feature_importance": {
+        "wait_time_mins": 0.1171,
+        "cycle_time_mins": 0.1127,
+        "day_of_week": 0.109,
+        "priority_encoded": 0.1086,
+        "team_encoded": 0.1032,
+        "category_encoded": 0.1011,
+        "month": 0.0942,
+        "event_count": 0.0897,
+        "escalated_int": 0.0888,
+        "is_weekend": 0.0756,
+        "hour_of_day": 0.0
+      }
+    },
+    "sla_model": {
+      "auc": null,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "breach_rate": 0.0,
+      "confusion_matrix": [
+        [
+          200000,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "n_train": 800000,
+      "n_test": 200000,
+      "feature_importance": {
+        "priority_encoded": 0.0,
+        "category_encoded": 0.0,
+        "team_encoded": 0.0,
+        "escalated_int": 0.0,
+        "event_count": 0.0,
+        "cycle_time_mins": 0.0,
+        "wait_time_mins": 0.0,
+        "hour_of_day": 0.0,
+        "day_of_week": 0.0,
+        "is_weekend": 0.0,
+        "month": 0.0
+      }
+    }
+  }
+]
